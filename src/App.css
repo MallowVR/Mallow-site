@@ -1,5 +1,17 @@
+#root {
+  background-color: black;
+  height: 100vh;
+  width: 100vw;
+  overflow: none;
+}
+
 .App {
+  margin: auto;
   text-align: center;
+  aspect-ratio: 4/3;
+  height: 80vh;
+  border: 1vh inset #aaa;
+  background-color: #fff;
 }
 
 .App-logo {
@@ -14,11 +26,10 @@
 }
 
 .App-header {
-  min-height: 100vh;
+  height: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
 }
 
