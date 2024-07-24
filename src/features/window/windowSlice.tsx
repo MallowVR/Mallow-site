@@ -9,6 +9,7 @@ export type Window = {
     windowHeight: number,
     focus: number,
     minimized: boolean,
+    maximized: boolean,
 }
 
 export interface WindowSliceState {
@@ -24,16 +25,34 @@ export const windowSlice = createAppSlice({
     initialState,
     reducers: {
         initializeWindow(state, action: PayloadAction<{newWindow: Window}>) {
-            state.Windows.push(action.payload.newWindow)
+            if(state.Windows.find((e) => e.appTitle == action.payload.newWindow.appTitle) == undefined)
+                state.Windows.push(action.payload.newWindow)
+                state.Windows.forEach((e) => {
+                    if (e.appTitle == action.payload.newWindow.appTitle) {
+                        e.focus = 1000
+                        e.minimized = false
+                    } else {
+                        e.focus -= 1
+                    }
+                })
         },
         toggleMinimized(state, action: PayloadAction<{appTitle: string}>) {
             const index = state.Windows.findIndex((e) => e.appTitle == action.payload.appTitle)
             state.Windows[index].minimized = !state.Windows[index].minimized
         },
+        closeWindow(state, action: PayloadAction<{appTitle: string}>) {
+            const index = state.Windows.findIndex((e) => e.appTitle == action.payload.appTitle)
+            state.Windows.splice(index, 1)
+        },
+        toggleMaximized(state, action: PayloadAction<{appTitle: string}>) {
+            const index = state.Windows.findIndex((e) => e.appTitle == action.payload.appTitle)
+            state.Windows[index].maximized = !state.Windows[index].maximized
+        },
         toggleFocused(state, action: PayloadAction<{appTitle: string}>) {
-            const index = state.Windows.forEach((e) => {
+            state.Windows.forEach((e) => {
                 if (e.appTitle == action.payload.appTitle) {
                     e.focus = 1000
+                    e.minimized = false
                 } else {
                     e.focus -= 1
                 }
@@ -60,20 +79,21 @@ export const windowSlice = createAppSlice({
                 state.Windows[index].windowY = maxY
             }
         },
-        resizeWindow(state, action: PayloadAction<{appTitle: string, deltaX: number, deltaY: number}>) {
+        resetPosition(state, action: PayloadAction<{appTitle: string, x: number, y: number}>) {
             const index = state.Windows.findIndex((e) => e.appTitle == action.payload.appTitle)
-            state.Windows[index].windowWidth += action.payload.deltaX
-            state.Windows[index].windowHeight += action.payload.deltaY
-            if (state.Windows[index].windowWidth < 300) {
-                state.Windows[index].windowWidth = 300
-            }
-            if (state.Windows[index].windowHeight < 300) {
-                state.Windows[index].windowHeight = 300
+            state.Windows[index].windowX = action.payload.x
+            state.Windows[index].windowY = action.payload.y
+        },
+        resizeWindow(state, action: PayloadAction<{appTitle: string, X: number, Y: number}>) {
+            const index = state.Windows.findIndex((e) => e.appTitle == action.payload.appTitle)
+            if (!state.Windows[index].maximized) {
+                state.Windows[index].windowWidth = action.payload.X
+                state.Windows[index].windowHeight = action.payload.Y
             }
         }
     }
 })
 
-export const { initializeWindow, toggleMinimized, toggleFocused, moveWindow, resizeWindow } = windowSlice.actions
+export const { initializeWindow, toggleMinimized, closeWindow, toggleMaximized, toggleFocused, moveWindow, resetPosition, resizeWindow } = windowSlice.actions
 
 // export default windowSlice.reducer
