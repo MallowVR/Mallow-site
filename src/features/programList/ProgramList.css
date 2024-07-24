@@ -1,0 +1,30 @@
+.program-list-wrapper {
+    position: absolute;
+    bottom: calc(3vh + 3px);
+    border: 3px outset #dedede;
+    min-width: 30%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    background: linear-gradient(to top, #0000ff, #00007b, #00007b, #00007b, #00007b);
+    .list-deco {
+        height: 100%;
+        width: 2vh;
+    }
+    .program-list {
+        display: flex;
+        flex-direction: column;
+        .list-item {
+            text-transform: capitalize;
+            padding: 0.5rem 0.5rem;
+            text-justify: left;
+            text-align: left;
+            justify-content: left;
+            background-color: #BDBDBD;
+
+            &:hover {
+                background-color: #00000000;
+                color: white;
+            }
+        }
+    }
+}
